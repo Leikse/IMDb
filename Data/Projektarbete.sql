@@ -1,0 +1,2 @@
+﻿INSERT INTO Movie (Title, ImageUrl, VideoUrl, Genre, Plot, Rating, ReleaseYear, UrlSlug)
+VALUES ('The Fast and the Furious', 'https://m.media-amazon.com/images/M/MV5BNzlkNzVjMDMtOTdhZC00MGE1LTkxODctMzFmMjkwZmMxZjFhXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg', 'https://www.imdb.com/video/vi2048898073?playlistId=tt0232500&ref_=tt_ov_vi', 'Action', 'Lorem ipsum dolor', 6.8, 2001, 'thefastandthefurious')

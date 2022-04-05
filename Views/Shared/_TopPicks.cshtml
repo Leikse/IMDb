@@ -1,0 +1,12 @@
+﻿@model IEnumerable<Projektarbete_ASP.NET.Models.Domain.Movie>
+
+<div class="text-center">
+    <h2 class="display-4">Top Picks</h2>
+    <div class="row">
+        
+        @foreach (var movie in Model)
+        {
+            <partial name="_MovieCard" model="movie"/>
+        }
+    </div>
+</div>
