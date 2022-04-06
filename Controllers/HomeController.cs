@@ -1,21 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Projektarbete_ASP.NET.Models;
-using System.Diagnostics;
+using Projektarbete_ASP.NET.Data;
+using Projektarbete_ASP.NET.Models.ViewModels;
 
 namespace Projektarbete_ASP.NET.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext context)
         {
-            _logger = logger;
+            Context = context;
         }
+
+        private ApplicationDbContext Context { get; }
+
 
         public IActionResult Index()
         {
-            return View();
+            var movies = Context.Movie.ToList();
+
+            var viewModel = new HomeIndexViewModel
+            {
+                TopPicks = movies
+            };
+
+            return View(viewModel);
         }
     }
 }

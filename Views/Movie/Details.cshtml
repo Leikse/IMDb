@@ -1,0 +1,33 @@
+﻿@model MovieIndexViewModel
+
+<section class="mb-4 p-5">
+    <div class="row">
+        <div class="text-start">
+            <h2 class="mb-3">@Model.Movie.Title</h2>
+            <span>@Model.Movie.Genre, @Model.Movie.ReleaseYear</span>
+        </div>
+        <div class="mb-3 text-end">
+            <i class="bi bi-star-fill"></i>@Model.Movie.Rating
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <div class="col-3">
+            <img src="@Model.Movie.ImageUrl"
+                 class="d-block col-3"
+                 alt="" 
+                 style="width:100%"/>
+        </div>
+        <div class="col-8 embed-responsive embed-responsive 16by9">
+            <video width="720" height="405" controls>
+                <source src="@Model.Movie.VideoUrl" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+    
+    <div class="row">
+        <span>@Model.Movie.Plot</span>
+    </div>
+
+</section>
