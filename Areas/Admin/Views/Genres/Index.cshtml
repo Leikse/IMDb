@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Projektarbete_ASP.NET.Models.Domain.Genre>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="row mt-3">
+    <h1 class="col">Genres</h1>
+
+    <div class="col text-end">
+        <a asp-action="Create">
+            <button class="btn btn-primary">New genre</button>
+        </a>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

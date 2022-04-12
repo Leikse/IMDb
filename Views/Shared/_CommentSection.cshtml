@@ -1,0 +1,12 @@
+﻿@model IEnumerable<Projektarbete_ASP.NET.Models.Domain.Comments>
+
+<div class="row">
+    @foreach (var comment in Model)
+    {
+        <div>
+            <h3 class="row">@comment.Name</h3>
+            <div class="row text-secondary">@comment.Date</div>
+            <span class="row">@comment.Comment</span>
+        </div>
+    }
+</div>

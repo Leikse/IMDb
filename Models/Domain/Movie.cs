@@ -8,7 +8,7 @@ public class Movie
     public string Title { get; set; }
     public Uri ImageUrl { get; set; }
     public Uri VideoUrl { get; set; }
-    public string Genre { get; set; }
+    public string? Genre { get; set; }
     public string Plot { get; set; }
 
     [Column(TypeName = "decimal(2,1)")]

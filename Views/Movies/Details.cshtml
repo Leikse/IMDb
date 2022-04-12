@@ -1,12 +1,15 @@
 ﻿@model MovieIndexViewModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
 <section class="mb-4 p-5">
     <div class="row">
-        <div class="text-start">
+        <div class="col text-start pb-3">
             <h2 class="mb-3">@Model.Movie.Title</h2>
             <span>@Model.Movie.Genre, @Model.Movie.ReleaseYear</span>
         </div>
-        <div class="mb-3 text-end">
+        <div class="col mb-3 text-end">
             <i class="bi bi-star-fill"></i>@Model.Movie.Rating
         </div>
     </div>
@@ -15,8 +18,8 @@
         <div class="col-3">
             <img src="@Model.Movie.ImageUrl"
                  class="d-block col-3"
-                 alt="" 
-                 style="width:100%"/>
+                 alt=""
+                 style="width:100%" />
         </div>
         <div class="col-8 embed-responsive embed-responsive 16by9">
             <video width="720" height="405" controls>
@@ -25,9 +28,23 @@
             </video>
         </div>
     </div>
-    
+
     <div class="row">
         <span>@Model.Movie.Plot</span>
     </div>
-
 </section>
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="row">
+        <form asp-controller="Movies" asp-action="Details">
+            <span class="row fw-bold">Comment</span>
+            <textarea asp-for="Comment" class="form-control col-8"></textarea>
+            <div class="form-group pt-4 pb-5">
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+}
+
+<partial name="_CommentSection" for="Comments" />

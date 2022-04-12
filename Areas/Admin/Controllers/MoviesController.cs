@@ -1,11 +1,15 @@
 ﻿#nullable disable
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Projektarbete_ASP.NET.Data;
 using Projektarbete_ASP.NET.Models.Domain;
+using Projektarbete_ASP.NET.Models.ViewModels;
 
 namespace Projektarbete_ASP.NET.Areas.Admin.Controllers
 {
+    [Authorize] //(Roles = "Administrator")
     [Area("Admin")]
     public class MoviesController : Controller
     {
@@ -23,27 +27,37 @@ namespace Projektarbete_ASP.NET.Areas.Admin.Controllers
         }
 
         // GET: Admin/Movies/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var movie = await _context.Movie
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
+        //    var movie = await _context.Movie
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (movie == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(movie);
-        }
+        //    return View(movie);
+        //}
 
         // GET: Admin/Movies/Create
         public IActionResult Create()
         {
-            return View();
+            var viewModel = new CreateMovieViewModel
+            {
+                GenreList = new List<SelectListItem>()
+            };
+
+            foreach (var genre in _context.Genre.ToList())
+            {
+                viewModel.GenreList.Add(new SelectListItem{Value = genre.Name, Text = genre.Name});
+            }
+
+            return View(viewModel);
         }
 
         // POST: Admin/Movies/Create
@@ -51,66 +65,39 @@ namespace Projektarbete_ASP.NET.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,ImageUrl,VideoUrl,Genre,Plot,Rating,ReleaseYear,UrlSlug")] Movie movie)
+        public async Task<IActionResult> Create(CreateMovieViewModel viewModel)
         {
+
+
             if (ModelState.IsValid)
             {
-                _context.Add(movie);
+                var movie = new Movie
+                {
+                    Title = viewModel.Title,
+                    ReleaseYear = viewModel.ReleaseYear,
+                    Plot = viewModel.Plot,
+                    Genre = viewModel.Genre,
+                    ImageUrl = viewModel.ImageUrl,
+                    VideoUrl = viewModel.VideoUrl,
+                    Rating = viewModel.Rating,
+                    UrlSlug = viewModel.Title.Replace("-", "").Replace(" ", "-").ToLower()
+                };
+
+                _context.Movie.Add(movie);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Movies");
             }
-            return View(movie);
-        }
-
-        // GET: Admin/Movies/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
+            viewModel = new CreateMovieViewModel
             {
-                return NotFound();
-            }
+                GenreList = new List<SelectListItem>()
+            };
 
-            var movie = await _context.Movie.FindAsync(id);
-            if (movie == null)
+            foreach (var genre in _context.Genre.ToList())
             {
-                return NotFound();
-            }
-            return View(movie);
-        }
-
-        // POST: Admin/Movies/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ImageUrl,VideoUrl,Genre,Plot,Rating,ReleaseYear,UrlSlug")] Movie movie)
-        {
-            if (id != movie.Id)
-            {
-                return NotFound();
+                viewModel.GenreList.Add(new SelectListItem { Value = genre.Name, Text = genre.Name });
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(movie);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MovieExists(movie.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(movie);
+            return View(viewModel);
         }
 
         // GET: Admin/Movies/Delete/5
@@ -128,7 +115,10 @@ namespace Projektarbete_ASP.NET.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            return View(movie);
+            movie = await _context.Movie.FindAsync(id);
+            _context.Movie.Remove(movie);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index", "Movies");
         }
 
         // POST: Admin/Movies/Delete/5
